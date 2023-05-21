@@ -1,8 +1,10 @@
 ```mermaid
 sequenceDiagram
+    participant user
     participant browser
     participant server
-
+    
+    user->>browser: enter message
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     activate server
     server-->>browser: HTML document
