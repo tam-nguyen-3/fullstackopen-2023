@@ -8,11 +8,12 @@ sequenceDiagram
     user->>browser: click button
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/new_note
     activate server
+    
+    Note right of browser: The browser sends a HTTP POST request which the server responds with a 302 status.
+    
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     server-->>browser: HTML document
     deactivate server
-
-    Note right of browser: The browser sends a HTTP POST request which the server responds with a 302 status.
     
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
     activate server
