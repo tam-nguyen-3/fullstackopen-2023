@@ -12,7 +12,7 @@ sequenceDiagram
     server-->>browser: HTML document
     deactivate server
 
-    Note right of browser: The browser sends a HTTP POST request which the server responds with a 302 status. The server requests the browser to do another HTTP GET request, and the browser reloads.
+    Note right of browser: The browser sends a HTTP POST request which the server responds with a 302 status.
     
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
     activate server
