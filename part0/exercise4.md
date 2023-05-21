@@ -5,8 +5,12 @@ sequenceDiagram
     participant server
     
     user->>browser: enter message
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    user->>browser: click button
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/new_note
     activate server
+    deactivate server
+    
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     server-->>browser: HTML document
     deactivate server
 
