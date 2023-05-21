@@ -4,12 +4,13 @@ sequenceDiagram
     participant browser
     participant server
     
-    user->>browser: enter message
+    user->>browser: enter note
     user->>browser: click button
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/new_note
     activate server
     
-    Note right of browser: The browser sends a HTTP POST request which the server responds with a 302 status.
+    Note right of browser: The browser sends a HTTP POST request to the server to save the note.
+    Note right of server: The server responds with 302 code and asks the browser to resend a GET request.
     
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     server-->>browser: HTML document
