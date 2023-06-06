@@ -56,25 +56,5 @@ const App = () => {
   )
 }
 
-// const App = () => {
-//   const course = 'Half Stack application development'
-//   const contents = [
-//     { part: 'Fundamentals of React', exercise: 10},
-//     { part: 'Using props to pass data', exercise: 7},
-//     { part: 'State of a component', exercise: 14}
-//   ]
-
-//   return (
-    // <div>
-    //   <Header course={course}></Header>
-    //   <Content contents={contents}></Content>
-    //   <Total contents={contents}></Total>
-    // </div>
-//   )
-// }
-
-// <Part course={props.contents[1].part} exercise={props.contents[1].exercise}></Part>
-// <Part course={props.contents[2].part} exercise={props.contents[2].exercise}></Part>
-
 
 export default App
