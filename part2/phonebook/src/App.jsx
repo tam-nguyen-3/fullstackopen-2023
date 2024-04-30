@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import personService from './components/persons'
 
 const Input = ({text, value, handleChange}) => {
@@ -80,24 +79,35 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault()
 
-    if (persons.findIndex((person) => person.name === newName) != -1) {
-      
-      return (alert(`${newName} is already added to phonebook`))
+    const thePerson = persons.find(p => p.name === newName)
+    if (persons.includes(thePerson)) {
+      if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const updatedPerson = {...thePerson, number: newNumber}
+
+        personService
+        .update(updatedPerson.id, updatedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(p => p.name === newName ? returnedPerson : p))
+          setNewName('')
+          setNewNumber('')
+        })
+      }
     }
 
-    const newPerson = {
-      // id: persons.length + 1,
-      name: newName,
-      number: newNumber
+    else {
+      const newPerson = {
+        name: newName,
+        number: newNumber
+      }
+  
+      personService
+        .create(newPerson)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
     }
-
-    personService
-      .create(newPerson)
-      .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
-        setNewName('')
-        setNewNumber('')
-      })
   }
 
   const handleDelete = (id) => {
