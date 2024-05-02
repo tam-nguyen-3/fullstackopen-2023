@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
-import personService from './components/persons'
+import Notification from './components/Notification'
+import Error from './components/Error'
+import personService from './services/persons'
 
 const Input = ({text, value, handleChange}) => {
   return (
@@ -32,7 +34,7 @@ const Detail = ({name, number, handleClick}) => {
       {name} {number} <button onClick={handleClick}>delete</button>
     </div>
   )
-} 
+}
 
 const Persons = ({persons, handleClick}) => {
   return (
@@ -45,6 +47,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [message, setMessage] = useState(null)
+  const [error, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -87,9 +91,21 @@ const App = () => {
         personService
         .update(updatedPerson.id, updatedPerson)
         .then(returnedPerson => {
+          // success notification
+          setMessage(`Added ${updatedPerson.name}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+
           setPersons(persons.map(p => p.name === newName ? returnedPerson : p))
           setNewName('')
           setNewNumber('')
+        })
+        .catch(error => {
+          setErrorMessage(`Information of ${updatedPerson.name} has already been removed from server`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
         })
       }
     }
@@ -103,6 +119,11 @@ const App = () => {
       personService
         .create(newPerson)
         .then(returnedPerson => {
+          setMessage(`Added ${newPerson.name}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
@@ -115,6 +136,13 @@ const App = () => {
     if (confirm(`Delete ${personToDelete.name}?`)) {
       personService
       .remove(id)
+      .then()
+      .catch(error => {
+        setErrorMessage(`Information of ${personToDelete.name} has already been removed from server`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
       setPersons(persons.filter(p => p.id != id))
     }
   }
@@ -122,6 +150,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message}></Notification>
+      <Error message={error}></Error>
       <Filter filter={newFilter} handleChange={handleFilterChange}></Filter>
       <h2>add a new</h2>
       <PersonForm formHandler={addName} name={newName} handleName={handleNameChange} number={newNumber} handleNumber={handleNumberChange}></PersonForm>
