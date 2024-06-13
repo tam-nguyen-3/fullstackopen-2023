@@ -4,7 +4,7 @@ mongoose.set('strictQuery', false)
 
 const uri = process.env.MONGODB_URI
 
-console.log('connecting to', uri)
+console.log('connecting to db...')
 
 mongoose.connect(uri, {
     serverSelectionTimeoutMS: 100000, // 30 seconds
@@ -19,8 +19,21 @@ mongoose.connect(uri, {
     })
 
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String
+    name: {
+        type: String,
+        minLength: 3,
+        required: true
+    },
+    number: {
+        type: String,
+        required: true,
+        validate: {
+            validator: function(v) {
+                return /^\d{2,3}-\d{6,}/.test(v);
+            },
+            message: props => `${props.value} is not a valid phone number`
+        }
+    }
 })
 
 personSchema.set('toJSON', {
