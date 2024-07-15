@@ -1,9 +1,10 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY2OGUzY2IzODcyNDI0NGRiOTZjNmU4YiIsImlhdCI6MTcyMDY5MDcyMX0.RVo3NsHwN_jIQ4lFRUmXqciXGbn7aBHLKMe85ls2cRI
 
 {
-    "title": "To be deleted",
-    "author": "Tam",
+    "title": "Test Blog final final",
+    "author": "Peralta",
     "url": "https://google.com",
-    "likes": 1
+    "likes": 100
 }

@@ -8,12 +8,11 @@ const api = supertest(app)
 const helper = require('./test_helper')
 
 const Blog = require('../models/blog')
-const { update } = require('lodash')
+const User = require('../models/user')
 
 describe('GET operations with initially saved blogs', () => {
   beforeEach(async () => {
     await Blog.deleteMany({})
-  
     await Blog.insertMany(helper.initialBlogs)
   })
 
@@ -51,7 +50,28 @@ test('unique identifier is named id, not _id', async () => {
 })
 
 describe('Adding a new blog', () => {
-  test('POST api: correct length and content', async () => {
+  let header 
+
+  beforeEach(async () => {
+    await User.deleteMany({})
+    const newUser = {
+      username: "root",
+      password: "salainen"
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+
+    const loginRes = await api
+      .post('/api/login')
+      .send(newUser)
+    
+    const token = loginRes.body.token
+    header = { 'Authorization': `Bearer ${token}` }
+  })
+
+  test('POST api: logged in, correct length and content', async () => {
     const newBlog = {
       title: "New Added Blog",
       author: "Nhat Phong",
@@ -61,17 +81,33 @@ describe('Adding a new blog', () => {
   
     await api
       .post('/api/blogs')
+      .set(header)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
   
     const res = await api.get('/api/blogs')
     const contents = res.body
-    const { id, ...newBlogWithoutId } = contents.find(blog => blog.title === "New Added Blog")
+    const { id, user, ...newBlogWithoutId } = contents.find(blog => blog.title === "New Added Blog")
     assert.strictEqual(contents.length, helper.initialBlogs.length + 1)
     assert.deepStrictEqual(newBlogWithoutId, newBlog)
   })
   
+  test('raise 401 Unauthorized if no token is provided', async () => {
+    const newBlog = {
+      title: "No token accompanied",
+      author: "Amy",
+      url: "x.com",
+      likes: 4
+    }
+  
+    await api
+      .post('/api/blogs')
+      .set({'Authorization': 'Bearer '})
+      .send(newBlog)
+      .expect(401)
+  })
+
   test('if the request misses the likes property, the default is 0', async () => {
     const newBlog = {
       title: "This doesn't have a like count",
@@ -81,6 +117,7 @@ describe('Adding a new blog', () => {
   
     await api
       .post('/api/blogs')
+      .set(header)
       .send(newBlog)
     
     const res = await api.get('/api/blogs')
@@ -97,6 +134,7 @@ describe('Adding a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set(header)
       .send(newBlog)
       .expect(400)
   })
@@ -109,12 +147,34 @@ describe('Adding a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set(header)
       .send(newBlog)
       .expect(400)
   })
 })
 
 describe("Deleting a blog", () => {
+  let header 
+
+  beforeEach(async () => {
+    await User.deleteMany({})
+    const newUser = {
+      username: "root",
+      password: "salainen"
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+
+    const loginRes = await api
+      .post('/api/login')
+      .send(newUser)
+    
+    const token = loginRes.body.token
+    header = { 'Authorization': `Bearer ${token}` }
+  })
+  
   test("successfully remove a blog given the valid id", async () => {
     const blogs = await helper.blogsInDb()
     const blogToDelete = blogs[0]
