@@ -1,9 +1,0 @@
-POST http://localhost:3001/api/blogs
-Content-Type: application/json
-Authorization: Bearer
-{
-    "title": "Guide to test the blog",
-    "author": "Peralta",
-    "url": "https://google.com",
-    "likes": 10
-}

@@ -1,9 +1,0 @@
-PUT http://localhost:3001/api/blogs/
-Content-Type: application/json
-
-{
-    "title": "To be deleted",
-    "author": "Tam",
-    "url": "https://google.com",
-    "likes": 1
-}
