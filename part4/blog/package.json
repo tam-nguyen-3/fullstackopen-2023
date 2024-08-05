@@ -5,7 +5,12 @@
   "scripts": {
     "test": "NODE_ENV=test node --test",
     "start": "NODE_ENV=production node index.js",
-    "dev": "NODE_ENV=development nodemon index.js"
+    "dev": "NODE_ENV=development nodemon index.js",
+    "build:ui": "rm -rf dist && cd ../../part5/bloglist-frontend && npm run build && cp -r dist ../../part4/blog && cd ../../part4/blog",
+    "deploy": "fly deploy",
+    "deploy:full": "npm run build:ui && npm run deploy",
+    "logs:prod": "fly logs",
+    "lint": "eslint ."
   },
   "author": "Tam",
   "license": "ISC",
